@@ -20,3 +20,16 @@ async def say_hello(ctx: inngest.Context):
     )
 
     return "Hello from the background!"
+@inngest_client.create_function(
+    fn_id="generate-report",
+    trigger=inngest.TriggerEvent(
+        event="report/generate",
+    ),
+)
+async def generate_report(ctx: inngest.Context):
+    await ctx.step.sleep(
+        "generate",
+        8,
+    )
+
+    return "Report generated"
