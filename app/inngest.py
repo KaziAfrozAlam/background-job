@@ -46,3 +46,16 @@ async def make_report(ctx: inngest.Context):
         return result
 
     return await ctx.step.run("build-report", build_report)
+    
+@inngest_client.create_function(
+    fn_id="heartbeat",
+    trigger=inngest.TriggerCron(cron="* * * * *"),
+)
+async def heartbeat(ctx: inngest.Context):
+    pending = sum(1 for r in reports.values() if r["status"] == "pending")
+    done = sum(1 for r in reports.values() if r["status"] == "done")
+    failed = sum(1 for r in reports.values() if r["status"] == "failed")
+    ctx.logger.info(
+        f"heartbeat: pending={pending} done={done} failed={failed}"
+    )
+    
