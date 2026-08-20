@@ -5,7 +5,7 @@ from fastapi import FastAPI, HTTPException, status
 from inngest.fast_api import serve
 from pydantic import BaseModel
 
-from app.inngest import inngest_client, make_report, say_hello
+from app.inngest import inngest_client, make_report, say_hello, heartbeat
 from app.state import reports
 
 app = FastAPI()
@@ -53,5 +53,5 @@ def get_report(report_id: str):
 serve(
     app,
     inngest_client,
-    [say_hello, make_report],
+    [say_hello, make_report, heartbeat],
 )
