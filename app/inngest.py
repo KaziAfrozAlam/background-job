@@ -27,6 +27,7 @@ async def say_hello(ctx: inngest.Context):
     trigger=inngest.TriggerEvent(
         event="report/requested",
     ),
+    retries=2,
 )
 async def make_report(ctx: inngest.Context):
     report_id = ctx.event.data["id"]
@@ -35,6 +36,8 @@ async def make_report(ctx: inngest.Context):
     await ctx.step.sleep("do-the-slow-work", 8)
 
     async def build_report():
+        if topic == "fail":
+            raise Exception("The report oven is broken!")
         result = f"Report about '{topic}' is ready."
         report = reports.get(report_id)
         if report:
